@@ -38,8 +38,17 @@ public class DragonsService {
         return new String[]{"fd", "ddd"};
     }
 
-    public String getDragonById( String id){
-        return id;
+    public DragonDto getDragonById( String id) throws IllegalArgumentException, NullPointerException{
+        try {
+            Dragon dragon = dragonsDao.getDragonById(Long.parseLong(id));
+            if (dragon == null){
+                throw new NullPointerException();
+            }
+            return new DragonDto(dragon);
+        }
+        catch (NumberFormatException e){
+            throw new IllegalArgumentException();
+        }
     }
 
     public String deleteDragonById( String id){

@@ -62,4 +62,8 @@ public class DragonsDao {
         }
     }
 
+    public Dragon getDragonById(Long id){
+        return dragons.get(id);
+    }
+
 }

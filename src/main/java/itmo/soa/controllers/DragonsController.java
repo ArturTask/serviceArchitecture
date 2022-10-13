@@ -30,7 +30,7 @@ public class DragonsController {
             return new ResponseEntity<>(dragonsService.addNewDragon(dragonDto), HttpStatus.OK);
         } catch (InstantiationException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
         }
     }
 
@@ -40,8 +40,14 @@ public class DragonsController {
     }
 
     @GetMapping(value = "/{id}")
-    public String getDragonById(@PathVariable String id){
-        return id;
+    public ResponseEntity<DragonDto> getDragonById(@PathVariable String id){
+        try {
+            return new ResponseEntity<>(dragonsService.getDragonById(id), HttpStatus.OK);
+        } catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+        } catch (NullPointerException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping(value = "/{id:[\\d]+}")
