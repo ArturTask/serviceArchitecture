@@ -7,6 +7,7 @@ import itmo.soa.enums.Color;
 import itmo.soa.enums.DragonCharacter;
 import itmo.soa.enums.DragonType;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -19,18 +20,27 @@ public class test {
 //        ZonedDateTime europeDateTime = now.atZone(ZoneId.of("Europe/Kaliningrad"));
 //        System.out.println(europeDateTime);
 
-//        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd MMM uuuu HH:mm");
-//        String date = "2016-08-22 14:30";
-//        LocalDateTime ldt = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd MMM uuuu HH:mm"));
+//        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.uuuu");
+////        String date = "22 08 2022 14:30";
+//        String date = "22.08.2022";
+//        LocalDateTime ldt = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd.MM.yyyy")).atStartOfDay();
 //        System.out.println("LocalDateTime : " + format.format(ldt));
-//        ZonedDateTime parisDateTime = ldt.atZone(ZoneId.of("Europe/Moscow"));
-//        System.out.println("ZonedDateTime : " + format.format(parisDateTime));
-        try {
-            Dragon d = new Dragon(-1L, "dd", new Coordinates(),"", 2, Color.BLACK, DragonType.AIR, DragonCharacter.CHAOTIC, new DragonCave());
-        } catch (InstantiationException e) {
-            e.printStackTrace();
+////        ZonedDateTime parisDateTime = ldt.atZone(ZoneId.of("Europe/Moscow"));
+////        System.out.println("ZonedDateTime : " + format.format(parisDateTime));
+//        try {
+//            Dragon d = new Dragon(-1L, "dd", new Coordinates(),"", 2, Color.BLACK, DragonType.AIR, DragonCharacter.CHAOTIC, new DragonCave());
+//        } catch (InstantiationException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println();
+
+
+        for (int i=0; i<300; i++){
+//            - ln(p)/a
+            System.out.println(-Math.log(Math.random())/0.020294);
         }
-        System.out.println();
+
+
 
     }
 }

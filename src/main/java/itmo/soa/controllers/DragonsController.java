@@ -1,20 +1,37 @@
 package itmo.soa.controllers;
 
+import itmo.soa.dto.AllDragons;
+import itmo.soa.dto.DragonDto;
+import itmo.soa.entity.Dragon;
+import itmo.soa.services.DragonsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/dragons")
 @CrossOrigin(origins = "http://localhost:3000")
 public class DragonsController {
 
+    @Autowired
+    DragonsService dragonsService;
+
     @GetMapping()
-    public String[] getAllDragons(){
-        return new String[]{"fd", "ddd"};
+    public ResponseEntity<AllDragons> getAllDragons(){
+        return new ResponseEntity<>(new AllDragons(dragonsService.getAllDragons()), HttpStatus.OK);
     }
 
     @PostMapping()
-    public String[] addNewDragon(){
-        return new String[]{"fd", "ddd"};
+    public ResponseEntity<DragonDto> addNewDragon(@RequestBody DragonDto dragonDto){
+        try {
+            return new ResponseEntity<>(dragonsService.addNewDragon(dragonDto), HttpStatus.OK);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping()

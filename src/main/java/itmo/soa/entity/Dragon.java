@@ -1,13 +1,12 @@
 package itmo.soa.entity;
 
+import itmo.soa.dto.DragonDto;
 import itmo.soa.enums.Color;
 import itmo.soa.enums.DragonCharacter;
 import itmo.soa.enums.DragonType;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -15,11 +14,9 @@ import java.time.format.DateTimeParseException;
 
 @Data
 public class Dragon {
-    private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("dd MMM uuuu HH:mm");
+    private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private final Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    private Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
     @Getter(AccessLevel.NONE)
@@ -47,12 +44,34 @@ public class Dragon {
         this.cave = cave;
     }
 
+    public Dragon(DragonDto dragonDto) throws InstantiationException {
+        if (dragonDto.getId()!=null) { // check with id
+            if (!checkInputValues(dragonDto.getId(), dragonDto.getName(), dragonDto.getCoordinates(), dragonDto.getCreationDate(), dragonDto.getAge(), dragonDto.getColor(), dragonDto.getType(), dragonDto.getCharacter(), dragonDto.getCave())) {
+                throw new InstantiationException("Dragon cannot be instantiated : wrong arguments");
+            }
+        }
+        else{
+            if (!checkInputValues(dragonDto.getName(), dragonDto.getCoordinates(), dragonDto.getCreationDate(), dragonDto.getAge(), dragonDto.getColor(), dragonDto.getType(), dragonDto.getCharacter(), dragonDto.getCave())) {
+                throw new InstantiationException("Dragon cannot be instantiated : wrong arguments");
+            }
+        }
+        this.id = dragonDto.getId();
+        this.name = dragonDto.getName();
+        this.coordinates = dragonDto.getCoordinates();
+        setCreationDate(dragonDto.getCreationDate());
+        this.age = dragonDto.getAge();
+        this.color = dragonDto.getColor();
+        this.type = dragonDto.getType();
+        this.character = dragonDto.getCharacter();
+        this.cave = dragonDto.getCave();
+    }
+
     public String getCreationDate() {
         return FORMAT.format(this.creationDate);
     }
 
     public void setCreationDate(String creationDateUsingFormat) throws DateTimeParseException {
-        LocalDateTime ldt = LocalDateTime.parse(creationDateUsingFormat, FORMAT);
+        LocalDateTime ldt = LocalDate.parse(creationDateUsingFormat, FORMAT).atStartOfDay();
         this.creationDate = ldt.atZone(ZoneId.of("Europe/Moscow"));
     }
 
@@ -74,7 +93,7 @@ public class Dragon {
 
     private boolean checkCreationDate(String creationDateUsingFormat) {
         try {
-            LocalDateTime ldt = LocalDateTime.parse(creationDateUsingFormat, FORMAT);
+            LocalDateTime ldt = LocalDate.parse(creationDateUsingFormat, FORMAT).atStartOfDay();
             return true;
         } catch (DateTimeParseException e) {
             return false;
@@ -82,7 +101,14 @@ public class Dragon {
     }
 
     private boolean checkInputValues(Long id, String name, Coordinates coordinates, String creationDate, long age, Color color, DragonType type, DragonCharacter character, DragonCave cave) {
-        if (id <= 0 || name.equals("") || age <= 0) {
+        if (id <= 0 || name == null || name.equals("") || age <= 0) {
+            return false;
+        }
+        return checkCreationDate(creationDate);
+    }
+
+    private boolean checkInputValues(String name, Coordinates coordinates, String creationDate, long age, Color color, DragonType type, DragonCharacter character, DragonCave cave) {
+        if (name == null || name.equals("") || age <= 0) {
             return false;
         }
         return checkCreationDate(creationDate);
