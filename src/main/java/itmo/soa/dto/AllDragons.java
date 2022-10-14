@@ -10,5 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 public class AllDragons {
 
-    private List<Dragon> dragons;
+    private List<DragonDto> dragons;
 }

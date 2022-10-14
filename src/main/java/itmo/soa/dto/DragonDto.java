@@ -1,5 +1,6 @@
 package itmo.soa.dto;
 
+import itmo.soa.entity.DragonDbo;
 import itmo.soa.entity.Coordinates;
 import itmo.soa.entity.Dragon;
 import itmo.soa.entity.DragonCave;
@@ -10,7 +11,6 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -23,16 +23,14 @@ public class DragonDto {
     private Long id;
     private String name;
     private Coordinates coordinates;
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private java.time.ZonedDateTime creationDate;
+    private String creationDate;
     private Long age;
     private Color color;
     private DragonType type;
     private DragonCharacter character;
     private DragonCave cave;
 
-    public DragonDto(Long id, String name, Coordinates coordinates, String creationDate, long age, String color, String type, String character, DragonCave cave) throws InstantiationException {
+    public DragonDto(Long id, String name, Coordinates coordinates, String creationDate, long age, String color, String type, String character, DragonCave cave) {
 
         this.id = id;
         this.name = name;
@@ -68,14 +66,26 @@ public class DragonDto {
         this.cave = dragon.getCave();
     }
 
-    public String getCreationDate() {
-        return FORMAT.format(this.creationDate);
+    public DragonDto(DragonDbo dragonDbo) {
+        this.id = dragonDbo.getId();
+        this.name = dragonDbo.getName();
+        this.coordinates = new Coordinates(dragonDbo.getX(), dragonDbo.getY());
+        this.creationDate = dragonDbo.getCreationDate();
+        this.age = dragonDbo.getAge();
+        this.color = dragonDbo.getColor();
+        this.type = dragonDbo.getType();
+        this.character = dragonDbo.getCharacter();
+        this.cave = dragonDbo.getCave();
     }
 
-    public void setCreationDate(String creationDateUsingFormat) throws DateTimeParseException {
-        LocalDateTime ldt = LocalDate.parse(creationDateUsingFormat, FORMAT).atStartOfDay();
-        this.creationDate = ldt.atZone(ZoneId.of("Europe/Moscow"));
-    }
+//    public String getCreationDate() {
+//        return FORMAT.format(this.creationDate);
+//    }
+//
+//    public void setCreationDate(String creationDateUsingFormat) throws DateTimeParseException {
+//        LocalDateTime ldt = LocalDate.parse(creationDateUsingFormat, FORMAT).atStartOfDay();
+//        this.creationDate = ldt.atZone(ZoneId.of("Europe/Moscow"));
+//    }
 
     public boolean setAge(long age) {
         if (age > 0) {

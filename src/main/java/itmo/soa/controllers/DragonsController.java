@@ -1,7 +1,9 @@
 package itmo.soa.controllers;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import itmo.soa.dto.AllDragons;
 import itmo.soa.dto.DragonDto;
+import itmo.soa.dto.ErrorDto;
 import itmo.soa.entity.Dragon;
 import itmo.soa.services.DragonsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/dragons")
 @CrossOrigin(origins = "http://localhost:3000")
-public class DragonsController {
+public class DragonsController extends BaseConroller{
 
     @Autowired
     DragonsService dragonsService;
@@ -25,13 +27,9 @@ public class DragonsController {
     }
 
     @PostMapping()
-    public ResponseEntity<DragonDto> addNewDragon(@RequestBody DragonDto dragonDto){
-        try {
-            return new ResponseEntity<>(dragonsService.addNewDragon(dragonDto), HttpStatus.OK);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
-        }
+    public ResponseEntity<DragonDto> addNewDragon(@RequestBody DragonDto dragonDto) throws InstantiationException {
+        return new ResponseEntity<>(dragonsService.addNewDragon(dragonDto), HttpStatus.OK);
+
     }
 
     @PutMapping()
@@ -40,14 +38,8 @@ public class DragonsController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<DragonDto> getDragonById(@PathVariable String id){
-        try {
-            return new ResponseEntity<>(dragonsService.getDragonById(id), HttpStatus.OK);
-        } catch (IllegalArgumentException e){
-            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
-        } catch (NullPointerException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<DragonDto> getDragonById(@PathVariable String id) throws IllegalArgumentException, NullPointerException{
+        return new ResponseEntity<>(dragonsService.getDragonById(id), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id:[\\d]+}")
@@ -55,7 +47,7 @@ public class DragonsController {
         return id;
     }
 
-//    business logic
+    /*business logic*/
     @PostMapping(value = "/age/average", produces = "text/plain;charset=UTF-8")
     public String getAverageAge(){
         return "0";
@@ -71,7 +63,17 @@ public class DragonsController {
         return name;
     }
 
+    /*exception handlers*/
 
+    @ExceptionHandler({NullPointerException.class })
+    public ResponseEntity<ErrorDto> handleNullPointerException() {
+        return new ResponseEntity<>(new ErrorDto(HttpStatus.NOT_FOUND.value(), "Dragon not found"), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<ErrorDto> handleIllegalArgumentException() {
+        return new ResponseEntity<>(new ErrorDto(HttpStatus.METHOD_NOT_ALLOWED.value(), "Wrong input values"), HttpStatus.METHOD_NOT_ALLOWED);
+    }
 
 
 

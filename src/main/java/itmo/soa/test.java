@@ -6,6 +6,7 @@ import itmo.soa.entity.DragonCave;
 import itmo.soa.enums.Color;
 import itmo.soa.enums.DragonCharacter;
 import itmo.soa.enums.DragonType;
+import itmo.soa.repository.DragonRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class test {
+
     public static void main(String[] args) {
 
 //        LocalDateTime now = LocalDateTime.now();
@@ -35,11 +37,10 @@ public class test {
 //        System.out.println();
 
 
-        for (int i=0; i<300; i++){
-//            - ln(p)/a
-            System.out.println(-Math.log(Math.random())/0.020294);
-        }
-
+//        for (int i=0; i<300; i++){
+////            - ln(p)/a
+//            System.out.println(-Math.log(Math.random())/0.020294);
+//        }
 
 
     }

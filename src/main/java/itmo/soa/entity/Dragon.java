@@ -12,9 +12,11 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+@NoArgsConstructor
 @Data
-public class Dragon {
+public class Dragon { // entity that we use in our service
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
 
     private Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
@@ -64,6 +66,18 @@ public class Dragon {
         this.type = dragonDto.getType();
         this.character = dragonDto.getCharacter();
         this.cave = dragonDto.getCave();
+    }
+
+    public Dragon(DragonDbo dragonDbo) {
+        this.id = dragonDbo.getId();
+        this.name = dragonDbo.getName();
+        this.coordinates = new Coordinates(dragonDbo.getX(), dragonDbo.getY());
+        setCreationDate(dragonDbo.getCreationDate());
+        this.age = dragonDbo.getAge();
+        this.color = dragonDbo.getColor();
+        this.type = dragonDbo.getType();
+        this.character = dragonDbo.getCharacter();
+        this.cave = dragonDbo.getCave();
     }
 
     public String getCreationDate() {

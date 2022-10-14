@@ -1,37 +1,46 @@
 package itmo.soa.services;
 
-import itmo.soa.dao.DragonsDao;
+import itmo.soa.entity.DragonDbo;
 import itmo.soa.dto.DragonDto;
 import itmo.soa.entity.Dragon;
+import itmo.soa.repository.DragonCaveRepository;
+import itmo.soa.repository.DragonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DragonsService {
 
     @Autowired
-    DragonsDao dragonsDao;
+    public DragonRepository dragonRepository;
 
-    public List<Dragon> getAllDragons(){
-        return dragonsDao.getAllDragons();
+    @Autowired
+    public DragonCaveRepository caveRepository;
+
+    public List<DragonDto> getAllDragons(){
+        Iterable<DragonDbo> all = dragonRepository.findAll();
+        List<DragonDto> dragonLinkedList = new LinkedList<>();
+        for (DragonDbo dragonDbo : all) {
+            dragonLinkedList.add(new DragonDto(dragonDbo));
+        }
+        return dragonLinkedList;
     }
 
     public DragonDto addNewDragon(DragonDto dragonDto) throws InstantiationException {
         if (dragonDto.getId()!=null){
             throw new InstantiationException();
         }
-        Dragon dragon = new Dragon(dragonDto);
-        if(dragonsDao.addDragon(dragon)){
-            dragonDto.setId(dragon.getId());
-            return dragonDto;
-        }
-        else {
-            throw new InstantiationException();
-        }
+        Dragon dragon = new Dragon(dragonDto); // if something is wrong throw new InstantiationException()
+        DragonDbo dragonDbo = new DragonDbo(dragon);
+        caveRepository.save(dragonDbo.getCave());
+        dragonRepository.save(dragonDbo);
+        dragonRepository.flush();
+        dragonDto.setId(dragonDbo.getId());
+        return dragonDto;
     }
 
     public String[] updateDragon(){
@@ -40,11 +49,11 @@ public class DragonsService {
 
     public DragonDto getDragonById( String id) throws IllegalArgumentException, NullPointerException{
         try {
-            Dragon dragon = dragonsDao.getDragonById(Long.parseLong(id));
-            if (dragon == null){
+            Optional<DragonDbo> dragon = dragonRepository.findById(Long.parseLong(id));
+            if (!dragon.isPresent()){
                 throw new NullPointerException();
             }
-            return new DragonDto(dragon);
+            return new DragonDto(dragon.get());
         }
         catch (NumberFormatException e){
             throw new IllegalArgumentException();
