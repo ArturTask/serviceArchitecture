@@ -55,9 +55,9 @@ public class DragonsController extends BaseConroller{
         return new ResponseEntity<>(new AllDragonsDto(dragonsService.getDragonsAgeLessThan(age)), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/name/{name}")
-    public String getDragonByName(@PathVariable String name){
-        return name;
+    @PostMapping(value = "/name/starts/{namePrefix}")
+    public ResponseEntity<AllDragonsDto> getDragonsStartsWithName(@PathVariable String namePrefix){
+        return new ResponseEntity<>(new AllDragonsDto(dragonsService.getDragonsStartsWithName(namePrefix)), HttpStatus.OK);
     }
 
     /*exception handlers*/

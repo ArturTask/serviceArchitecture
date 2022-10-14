@@ -111,8 +111,20 @@ public class DragonsService {
         return currentDragons;
     }
 
-    public String getDragonByName( String name){
-        return name;
+    public List<DragonDto> getDragonsStartsWithName(String namePrefix){
+
+        List<DragonDbo> allDragons = dragonRepository.findAll();
+        if (allDragons.isEmpty()|| namePrefix==null){
+            return new LinkedList<>(); // empty list
+        }
+
+        List<DragonDto> currentDragons = new LinkedList<>();
+        for (DragonDbo dragonDbo : allDragons) {
+            if (dragonDbo.getName().startsWith(namePrefix)){
+                currentDragons.add(new DragonDto(dragonDbo));
+            }
+        }
+        return currentDragons;
     }
 
 
