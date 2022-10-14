@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class AllDragons {
+public class AllDragonsDto {
 
     private List<DragonDto> dragons;
 }

@@ -1,5 +1,7 @@
 package itmo.soa.services;
 
+import itmo.soa.dto.AgeDto;
+import itmo.soa.dto.AllDragonsDto;
 import itmo.soa.entity.DragonDbo;
 import itmo.soa.dto.DragonDto;
 import itmo.soa.entity.Dragon;
@@ -67,17 +69,46 @@ public class DragonsService {
         }
     }
 
-    public String deleteDragonById( String id){
-        return id;
+    public void deleteDragonById( String id) throws NullPointerException, IllegalArgumentException{
+        try {
+            Optional<DragonDbo> dragon = dragonRepository.findById(Long.parseLong(id));
+            if (!dragon.isPresent()){
+                throw new NullPointerException();
+            }
+            dragonRepository.deleteById(Long.parseLong(id));
+        }
+        catch (NumberFormatException e){
+            throw new IllegalArgumentException();
+        }
     }
 
     //    business logic
-    public String getAverageAge(){
-        return "0";
+    public AgeDto getAverageAge(){
+        List<DragonDbo> allDragons = dragonRepository.findAll();
+        if (allDragons.isEmpty()){
+            return new AgeDto((float) 0.0);
+        }
+        Long summAge = 0L;
+        for (DragonDbo dragonDbo : allDragons) {
+            summAge += dragonDbo.getAge();
+        }
+        return new AgeDto((float) (summAge/allDragons.size()));
     }
 
-    public String getAgeLessThan( int id){
-        return String.valueOf(id);
+    public List<DragonDto> getDragonsAgeLessThan(String age) throws NumberFormatException{
+        long lessThanAge = Long.parseLong(age);
+        List<DragonDbo> allDragons = dragonRepository.findAll();
+        if (allDragons.isEmpty()){
+            return new LinkedList<>(); // empty list
+        }
+
+        List<DragonDto> currentDragons = new LinkedList<>();
+        for (DragonDbo dragonDbo : allDragons) {
+            if (dragonDbo.getAge() < lessThanAge){
+                currentDragons.add(new DragonDto(dragonDbo));
+            }
+        }
+        return currentDragons;
     }
 
     public String getDragonByName( String name){

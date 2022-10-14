@@ -1,17 +1,11 @@
 package itmo.soa.controllers;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import itmo.soa.dto.AllDragons;
-import itmo.soa.dto.DragonDto;
-import itmo.soa.dto.ErrorDto;
-import itmo.soa.entity.Dragon;
+import itmo.soa.dto.*;
 import itmo.soa.services.DragonsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/dragons")
@@ -22,8 +16,8 @@ public class DragonsController extends BaseConroller{
     DragonsService dragonsService;
 
     @GetMapping()
-    public ResponseEntity<AllDragons> getAllDragons(){
-        return new ResponseEntity<>(new AllDragons(dragonsService.getAllDragons()), HttpStatus.OK);
+    public ResponseEntity<AllDragonsDto> getAllDragons(){
+        return new ResponseEntity<>(new AllDragonsDto(dragonsService.getAllDragons()), HttpStatus.OK);
     }
 
     @PostMapping()
@@ -44,19 +38,21 @@ public class DragonsController extends BaseConroller{
     }
 
     @DeleteMapping(value = "/{id}") //@DeleteMapping(value = "/{id:[\\d]+}") - only allows delete mapping with numeric id!! => /dragons/f - another controller
-    public String deleteDragonById(@PathVariable String id){
-        return id;
+    public ResponseEntity<DefaultDto> deleteDragonById(@PathVariable String id) throws NullPointerException, IllegalArgumentException {
+        dragonsService.deleteDragonById(id);
+        return new ResponseEntity<>(new DefaultDto(HttpStatus.OK.value(), "Successful Operation"), HttpStatus.OK);
     }
 
     /*business logic*/
     @PostMapping(value = "/age/average", produces = "text/plain;charset=UTF-8")
-    public String getAverageAge(){
-        return "0";
+    public ResponseEntity<AgeDto> getAverageAge(){
+        return new ResponseEntity<>(dragonsService.getAverageAge(), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/age/less/{id}")
-    public String getAgeLessThan(@PathVariable int id){
-        return String.valueOf(id);
+    @PostMapping(value = "/age/less/{age}")
+    public ResponseEntity<AllDragonsDto> getDragonsAgeLessThan(@PathVariable String age){
+
+        return new ResponseEntity<>(new AllDragonsDto(dragonsService.getDragonsAgeLessThan(age)), HttpStatus.OK);
     }
 
     @PostMapping(value = "/name/{name}")
@@ -74,6 +70,11 @@ public class DragonsController extends BaseConroller{
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<ErrorDto> handleIllegalArgumentException() {
         return new ResponseEntity<>(new ErrorDto(HttpStatus.METHOD_NOT_ALLOWED.value(), "Invalid id supplied"), HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler({NumberFormatException.class})
+    public ResponseEntity<ErrorDto> handleNumberFormatException() {
+        return new ResponseEntity<>(new ErrorDto(HttpStatus.METHOD_NOT_ALLOWED.value(), "Invalid age supplied"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
 
