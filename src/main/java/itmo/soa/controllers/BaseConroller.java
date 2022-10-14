@@ -12,6 +12,6 @@ public class BaseConroller {
 
     @ExceptionHandler({ InvalidFormatException.class, InstantiationException.class})
     public ResponseEntity<ErrorDto> handleBaseExceptions() {
-        return new ResponseEntity<>(new ErrorDto(HttpStatus.METHOD_NOT_ALLOWED.value(), "Wrong input"), HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity<>(new ErrorDto(HttpStatus.BAD_REQUEST.value(), "Wrong input"), HttpStatus.BAD_REQUEST);
     }
 }

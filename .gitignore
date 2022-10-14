@@ -38,3 +38,4 @@ config/
 mvnw
 mvnw.cmd
 /lib/
+*.DS_Store

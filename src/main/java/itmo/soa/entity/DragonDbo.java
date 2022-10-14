@@ -88,6 +88,19 @@ public class DragonDbo { // entity for database
         return false;
     }
 
+    public DragonDbo update(Dragon dragon){
+        this.name = dragon.getName();
+        this.x = dragon.getCoordinates().getX();
+        this.y = dragon.getCoordinates().getY();
+        this.creationDate = dragon.getCreationDate();
+        this.age = dragon.getAge();
+        this.color = dragon.getColor();
+        this.type = dragon.getType();
+        this.character = dragon.getCharacter();
+        this.cave = dragon.getCave();
+        return this;
+    }
+
 
 }
 

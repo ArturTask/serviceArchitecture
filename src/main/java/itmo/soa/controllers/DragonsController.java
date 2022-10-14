@@ -33,8 +33,9 @@ public class DragonsController extends BaseConroller{
     }
 
     @PutMapping()
-    public String[] updateDragon(){
-        return new String[]{"fd", "ddd"};
+    public ResponseEntity<DragonDto> updateDragon(@RequestBody DragonDto dragonDto) throws InstantiationException, NullPointerException {
+        return new ResponseEntity<>(dragonsService.updateDragon(dragonDto), HttpStatus.OK);
+
     }
 
     @GetMapping(value = "/{id}")
@@ -42,7 +43,7 @@ public class DragonsController extends BaseConroller{
         return new ResponseEntity<>(dragonsService.getDragonById(id), HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id:[\\d]+}")
+    @DeleteMapping(value = "/{id}") //@DeleteMapping(value = "/{id:[\\d]+}") - only allows delete mapping with numeric id!! => /dragons/f - another controller
     public String deleteDragonById(@PathVariable String id){
         return id;
     }
@@ -53,7 +54,7 @@ public class DragonsController extends BaseConroller{
         return "0";
     }
 
-    @PostMapping(value = "/age/less/{id:[\\d+]}")
+    @PostMapping(value = "/age/less/{id}")
     public String getAgeLessThan(@PathVariable int id){
         return String.valueOf(id);
     }
@@ -72,7 +73,7 @@ public class DragonsController extends BaseConroller{
 
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<ErrorDto> handleIllegalArgumentException() {
-        return new ResponseEntity<>(new ErrorDto(HttpStatus.METHOD_NOT_ALLOWED.value(), "Wrong input values"), HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity<>(new ErrorDto(HttpStatus.METHOD_NOT_ALLOWED.value(), "Invalid id supplied"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
 

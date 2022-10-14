@@ -16,10 +16,10 @@ import java.util.Optional;
 public class DragonsService {
 
     @Autowired
-    public DragonRepository dragonRepository;
+    private DragonRepository dragonRepository;
 
     @Autowired
-    public DragonCaveRepository caveRepository;
+    private DragonCaveRepository caveRepository;
 
     public List<DragonDto> getAllDragons(){
         Iterable<DragonDbo> all = dragonRepository.findAll();
@@ -43,8 +43,15 @@ public class DragonsService {
         return dragonDto;
     }
 
-    public String[] updateDragon(){
-        return new String[]{"fd", "ddd"};
+    public DragonDto updateDragon(DragonDto dragonDto) throws InstantiationException {
+
+        Optional<DragonDbo> dragonDbo = dragonRepository.findById(dragonDto.getId());
+        if (!dragonDbo.isPresent()){
+            throw new NullPointerException();
+        }
+        Dragon dragon = new Dragon(dragonDto);
+        dragonRepository.save(dragonDbo.get().update(dragon));
+        return dragonDto;
     }
 
     public DragonDto getDragonById( String id) throws IllegalArgumentException, NullPointerException{
