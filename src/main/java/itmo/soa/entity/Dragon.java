@@ -28,7 +28,7 @@ public class Dragon { // entity that we use in our service
     private Color color; //Поле не может быть null
     private DragonType type; //Поле не может быть null
     private DragonCharacter character; //Поле может быть null
-    private DragonCave cave; //Поле может быть null
+    private DragonCave cave; //Поле не может быть null
 
     public Dragon(Long id, String name, Coordinates coordinates, String creationDate, long age, Color color, DragonType type, DragonCharacter character, DragonCave cave) throws InstantiationException {
 
@@ -60,7 +60,7 @@ public class Dragon { // entity that we use in our service
         this.id = dragonDto.getId();
         this.name = dragonDto.getName();
         this.coordinates = dragonDto.getCoordinates();
-        setCreationDate(dragonDto.getCreationDate());
+        setCreationDate(FORMAT.format(LocalDateTime.now()));
         this.age = dragonDto.getAge();
         this.color = dragonDto.getColor();
         this.type = dragonDto.getType();
@@ -118,12 +118,18 @@ public class Dragon { // entity that we use in our service
         if (id <= 0 || name == null || name.equals("") || age <= 0) {
             return false;
         }
+        if (creationDate==null){
+            return true;
+        }
         return checkCreationDate(creationDate);
     }
 
     private boolean checkInputValues(String name, Coordinates coordinates, String creationDate, long age, Color color, DragonType type, DragonCharacter character, DragonCave cave) {
         if (name == null || name.equals("") || age <= 0) {
             return false;
+        }
+        if (creationDate==null){
+            return true;
         }
         return checkCreationDate(creationDate);
     }

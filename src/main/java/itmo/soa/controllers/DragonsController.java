@@ -1,6 +1,10 @@
 package itmo.soa.controllers;
 
 import itmo.soa.dto.*;
+import itmo.soa.exceptions.CaveNotFoundException;
+import itmo.soa.exceptions.DragonNotFoundException;
+import itmo.soa.exceptions.IllegalAgeException;
+import itmo.soa.exceptions.IllegalIdException;
 import itmo.soa.services.DragonsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/dragons")
 @CrossOrigin(origins = "http://localhost:3000")
-public class DragonsController extends BaseConroller{
+public class DragonsController extends BaseController {
 
     @Autowired
     DragonsService dragonsService;
@@ -23,22 +27,21 @@ public class DragonsController extends BaseConroller{
     @PostMapping()
     public ResponseEntity<DragonDto> addNewDragon(@RequestBody DragonDto dragonDto) throws InstantiationException {
         return new ResponseEntity<>(dragonsService.addNewDragon(dragonDto), HttpStatus.OK);
-
     }
 
     @PutMapping()
-    public ResponseEntity<DragonDto> updateDragon(@RequestBody DragonDto dragonDto) throws InstantiationException, NullPointerException {
+    public ResponseEntity<DragonDto> updateDragon(@RequestBody DragonDto dragonDto) throws InstantiationException, DragonNotFoundException, CaveNotFoundException {
         return new ResponseEntity<>(dragonsService.updateDragon(dragonDto), HttpStatus.OK);
 
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<DragonDto> getDragonById(@PathVariable String id) throws IllegalArgumentException, NullPointerException{
+    public ResponseEntity<DragonDto> getDragonById(@PathVariable String id) throws IllegalIdException, DragonNotFoundException {
         return new ResponseEntity<>(dragonsService.getDragonById(id), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}") //@DeleteMapping(value = "/{id:[\\d]+}") - only allows delete mapping with numeric id!! => /dragons/f - another controller
-    public ResponseEntity<DefaultDto> deleteDragonById(@PathVariable String id) throws NullPointerException, IllegalArgumentException {
+    public ResponseEntity<DefaultDto> deleteDragonById(@PathVariable String id) throws IllegalIdException, DragonNotFoundException {
         dragonsService.deleteDragonById(id);
         return new ResponseEntity<>(new DefaultDto(HttpStatus.OK.value(), "Successful Operation"), HttpStatus.OK);
     }
@@ -50,7 +53,7 @@ public class DragonsController extends BaseConroller{
     }
 
     @PostMapping(value = "/age/less/{age}")
-    public ResponseEntity<AllDragonsDto> getDragonsAgeLessThan(@PathVariable String age) throws NumberFormatException{
+    public ResponseEntity<AllDragonsDto> getDragonsAgeLessThan(@PathVariable String age) throws IllegalAgeException {
         return new ResponseEntity<>(new AllDragonsDto(dragonsService.getDragonsAgeLessThan(age)), HttpStatus.OK);
     }
 
@@ -61,18 +64,23 @@ public class DragonsController extends BaseConroller{
 
     /*exception handlers*/
 
-    @ExceptionHandler({NullPointerException.class })
-    public ResponseEntity<ErrorDto> handleNullPointerException() {
+    @ExceptionHandler({DragonNotFoundException.class })
+    public ResponseEntity<ErrorDto> handleDragonNotFoundException() {
         return new ResponseEntity<>(new ErrorDto(HttpStatus.NOT_FOUND.value(), "Dragon not found"), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<ErrorDto> handleIllegalArgumentException() {
+    @ExceptionHandler({CaveNotFoundException.class })
+    public ResponseEntity<ErrorDto> handleCaveNotFoundException() {
+        return new ResponseEntity<>(new ErrorDto(HttpStatus.NOT_FOUND.value(), "Cave not found"), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({IllegalIdException.class})
+    public ResponseEntity<ErrorDto> handleIllegalIdException() {
         return new ResponseEntity<>(new ErrorDto(HttpStatus.METHOD_NOT_ALLOWED.value(), "Invalid id supplied"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @ExceptionHandler({NumberFormatException.class})
-    public ResponseEntity<ErrorDto> handleNumberFormatException() {
+    @ExceptionHandler({IllegalAgeException.class})
+    public ResponseEntity<ErrorDto> handleIllegalAgeException() {
         return new ResponseEntity<>(new ErrorDto(HttpStatus.METHOD_NOT_ALLOWED.value(), "Invalid age supplied"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 

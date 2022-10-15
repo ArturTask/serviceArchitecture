@@ -23,7 +23,7 @@ public class test {
 //        LocalDateTime now = LocalDateTime.now();
 //        ZonedDateTime europeDateTime = now.atZone(ZoneId.of("Europe/Kaliningrad"));
 //        System.out.println(europeDateTime);
-
+//
 //        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.uuuu");
 ////        String date = "22 08 2022 14:30";
 //        String date = "22.08.2022";
