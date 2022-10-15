@@ -50,8 +50,7 @@ public class DragonsController extends BaseConroller{
     }
 
     @PostMapping(value = "/age/less/{age}")
-    public ResponseEntity<AllDragonsDto> getDragonsAgeLessThan(@PathVariable String age){
-
+    public ResponseEntity<AllDragonsDto> getDragonsAgeLessThan(@PathVariable String age) throws NumberFormatException{
         return new ResponseEntity<>(new AllDragonsDto(dragonsService.getDragonsAgeLessThan(age)), HttpStatus.OK);
     }
 
