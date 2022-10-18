@@ -40,3 +40,4 @@ Check RequestService in SecondServiceArchitecture for better understanding
 ### useful materials:
 
 https://www.aurigait.com/blog/how-to-implement-2-way-ssl-using-spring-boot/
+https://habr.com/ru/company/dbtc/blog/487318/?ysclid=l9bjqwztc1659089142
