@@ -5,10 +5,15 @@ keytool -genkeypair -alias soa -keyalg RSA -keysize 4096 -storetype jks -keystor
 
  ####**add to application.properties:**
 server.ssl.key-alias=soa
+
 server.ssl.key-store-type=JKS
+
 server.ssl.key-password=password
+
 server.ssl.key-store=classpath:soa.jks
+
 server.ssl.key-store-password=password
+
 server.ssl.enabled=true
 
 ####**move soa.jks to src/main/resources**
